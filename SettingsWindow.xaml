@@ -4,8 +4,9 @@
         Title="Settings" Height="500" Width="700"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         UseLayoutRounding="True" SnapsToDevicePixels="True"
-        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Topmost="True">
-    <Border BorderThickness="0" CornerRadius="12">
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Topmost="True"
+        Opacity="0" Visibility="Collapsed">
+    <Border BorderThickness="1" BorderBrush="#33FFFFFF" CornerRadius="12">
         <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF1C2128" Offset="0"/>
@@ -15,134 +16,224 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="1"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
             <Border Grid.Row="0" Background="#1C2128" CornerRadius="12,12,0,0" MouseLeftButtonDown="Header_MouseLeftButtonDown">
                 <Grid>
-                    <Button Content="❓" HorizontalAlignment="Left" VerticalAlignment="Center"
+                    <Button x:Name="BtnHelp" Content="&#xE897;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"
                             Margin="15,0,0,0" Width="30" Height="30"
-                            Style="{StaticResource ActionButtonStyle}" Click="HelpButton_Click" ToolTip="Help"/>
-                    <TextBlock Text="⚙️  Utility Setting" Foreground="White" 
-                               FontSize="16" FontWeight="SemiBold"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Style="{StaticResource IconOnlyButtonStyle}" Click="HelpButton_Click" ToolTip="Help">
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" Duration="0:0:0.4">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="15">
+                                                <EasingDoubleKeyFrame.EasingFunction>
+                                                    <QuadraticEase EasingMode="EaseOut"/>
+                                                </EasingDoubleKeyFrame.EasingFunction>
+                                            </EasingDoubleKeyFrame>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-10">
+                                                <EasingDoubleKeyFrame.EasingFunction>
+                                                    <QuadraticEase EasingMode="EaseInOut"/>
+                                                </EasingDoubleKeyFrame.EasingFunction>
+                                            </EasingDoubleKeyFrame>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="5">
+                                                <EasingDoubleKeyFrame.EasingFunction>
+                                                    <QuadraticEase EasingMode="EaseInOut"/>
+                                                </EasingDoubleKeyFrame.EasingFunction>
+                                            </EasingDoubleKeyFrame>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0">
+                                                <EasingDoubleKeyFrame.EasingFunction>
+                                                    <QuadraticEase EasingMode="EaseIn"/>
+                                                </EasingDoubleKeyFrame.EasingFunction>
+                                            </EasingDoubleKeyFrame>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                        <Button.RenderTransform>
+                            <RotateTransform Angle="0" CenterX="15" CenterY="15"/>
+                        </Button.RenderTransform>
+                    </Button>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0" TextOptions.TextFormattingMode="Ideal"/>
+                        <TextBlock Text="Utility Setting" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextOptions.TextFormattingMode="Ideal"/>
+                    </StackPanel>
+
+                    <Button Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Center"
                             Margin="0,0,15,0" Width="30" Height="30"
-                            Foreground="#FF6B6B" Background="Transparent" BorderThickness="0"
-                            FontSize="16" FontWeight="Bold" Cursor="Hand" Click="CloseButton_Click"/>
+                            Foreground="#CCCCCC" Background="Transparent" BorderThickness="0"
+                            FontSize="12" FontWeight="Bold" Cursor="Hand" Click="CloseButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="CloseBorder" Background="Transparent" CornerRadius="4">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="CloseBorder" Property="Background" Value="#E81123"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </Grid>
             </Border>
-            <Grid Grid.Row="1">
+            
+            <Border Grid.Row="1" BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1"/>
+            
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" BorderBrush="#33FFFFFF" BorderThickness="0,0,1,0" Background="#151A21">
+                
+                <Border Grid.Column="0" BorderBrush="#1FFFFFFF" BorderThickness="0,0,1,0" Background="Transparent">
                     <StackPanel Margin="0,20,0,0">
-                        <RadioButton Style="{StaticResource SidebarTabStyle}" Content="🔧" x:Name="TabGeneral" IsChecked="True" Checked="Tab_Checked" Tag="0" ToolTip="General"/>
-                        <RadioButton Style="{StaticResource SidebarTabStyle}" Content="⚡" x:Name="TabAdvanced" Checked="Tab_Checked" Tag="1" ToolTip="Advanced"/>
-                        <RadioButton Style="{StaticResource SidebarTabStyle}" Content="ℹ️" x:Name="TabAbout" Checked="Tab_Checked" Tag="3" ToolTip="About"/>
+                        <RadioButton Style="{StaticResource SidebarTabStyle}" Content="&#xE80F;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" x:Name="TabGeneral" IsChecked="True" Checked="Tab_Checked" Tag="0" ToolTip="General"/>
+                        <RadioButton Style="{StaticResource SidebarTabStyle}" Content="&#xE71D;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" x:Name="TabAdvanced" Checked="Tab_Checked" Tag="1" ToolTip="Advanced"/>
+                        <RadioButton Style="{StaticResource SidebarTabStyle}" Content="&#xE946;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" x:Name="TabAbout" Checked="Tab_Checked" Tag="3" ToolTip="About"/>
                     </StackPanel>
                 </Border>
-                <Grid Grid.Column="1" Margin="20">
+                
+                <Grid Grid.Column="1" Margin="24,10,24,24">
                     <ScrollViewer x:Name="PanelGeneral" Visibility="Visible" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <TextBlock Text="CUSTOM HOTKEYS" Foreground="#00ADEF" FontSize="12" FontWeight="Bold" Margin="0,0,0,10"/>
-                            <Border Background="#2A2F36" CornerRadius="8" Padding="15" Margin="0,0,0,20">
-                                <StackPanel>
-                                    <Grid Margin="0,0,0,10">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Toggle Menu" Foreground="White" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" x:Name="HkToggleMenu" Style="{StaticResource HotkeyBoxStyle}" Tag="ToggleMenu" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
-                                        <Button Grid.Column="2" Content="✕" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="ToggleMenu"/>
-                                    </Grid>
-                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <Grid Margin="0,0,0,10">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Mute Active App" Foreground="White" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" x:Name="HkMuteActive" Style="{StaticResource HotkeyBoxStyle}" Tag="MuteActive" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
-                                        <Button Grid.Column="2" Content="✕" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="MuteActive"/>
-                                    </Grid>
-                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <Grid Margin="0,0,0,10">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Solo Mode (Mute Others)" Foreground="White" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" x:Name="HkSoloMode" Style="{StaticResource HotkeyBoxStyle}" Tag="SoloMode" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
-                                        <Button Grid.Column="2" Content="✕" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="SoloMode"/>
-                                    </Grid>
-                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <Grid Margin="0,0,0,10">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Unmute All Apps" Foreground="White" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" x:Name="HkUnmuteAll" Style="{StaticResource HotkeyBoxStyle}" Tag="UnmuteAll" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
-                                        <Button Grid.Column="2" Content="✕" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="UnmuteAll"/>
-                                    </Grid>
-                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <Grid Margin="0,0,0,0">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Panic Reset (50% Volume)" Foreground="White" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" x:Name="HkPanicReset" Style="{StaticResource HotkeyBoxStyle}" Tag="PanicReset" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
-                                        <Button Grid.Column="2" Content="✕" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="PanicReset"/>
-                                    </Grid>
-                                </StackPanel>
+                            <TextBlock Text="CUSTOM HOTKEYS" Foreground="#999999" FontSize="11" FontWeight="SemiBold" Margin="0,10,0,10"/>
+                            
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,10" Margin="0,0,0,4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Toggle Menu" Foreground="White" VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Grid.Column="1" x:Name="HkToggleMenu" Style="{StaticResource HotkeyBoxStyle}" Tag="ToggleMenu" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
+                                    <Button Grid.Column="2" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="10" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="ToggleMenu"/>
+                                </Grid>
                             </Border>
-                            <TextBlock Text="EXTRA FEATURES" Foreground="#00ADEF" FontSize="12" FontWeight="Bold" Margin="0,0,0,10"/>
-                            <Border Background="#2A2F36" CornerRadius="8" Padding="15">
-                                <StackPanel>
-                                    <CheckBox x:Name="CbMuteMode" Content="Enable Mute Mode" Foreground="White" Margin="0,0,0,10"/>
-                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <CheckBox x:Name="CbSoloMode" Content="Enable Solo Mode" Foreground="White" Margin="0,0,0,10"/>
-                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <CheckBox x:Name="CbPanicMode" Content="Enable Panic Mode" Foreground="White" Margin="0,0,0,10"/>
-                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <CheckBox x:Name="CbTrackpadGesture" Content="Enable 4-Finger Trackpad Gesture" Foreground="White" Margin="0,0,0,0"/>
-                                </StackPanel>
+                            
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,10" Margin="0,0,0,4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Mute Active App" Foreground="White" VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Grid.Column="1" x:Name="HkMuteActive" Style="{StaticResource HotkeyBoxStyle}" Tag="MuteActive" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
+                                    <Button Grid.Column="2" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="10" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="MuteActive"/>
+                                </Grid>
                             </Border>
-                            <Button Content="SAVE CHANGES" Background="#00ADEF" Foreground="White" 
-                                    Margin="0,20,0,0" Padding="10" FontWeight="Bold"
-                                    HorizontalAlignment="Right" Click="SaveButton_Click" Cursor="Hand"/>
+
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,10" Margin="0,0,0,4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Solo Mode (Mute Others)" Foreground="White" VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Grid.Column="1" x:Name="HkSoloMode" Style="{StaticResource HotkeyBoxStyle}" Tag="SoloMode" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
+                                    <Button Grid.Column="2" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="10" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="SoloMode"/>
+                                </Grid>
+                            </Border>
+
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,10" Margin="0,0,0,4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Unmute All Apps" Foreground="White" VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Grid.Column="1" x:Name="HkUnmuteAll" Style="{StaticResource HotkeyBoxStyle}" Tag="UnmuteAll" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
+                                    <Button Grid.Column="2" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="10" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="UnmuteAll"/>
+                                </Grid>
+                            </Border>
+
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,10" Margin="0,0,0,20">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Panic Reset (50% Volume)" Foreground="White" VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Grid.Column="1" x:Name="HkPanicReset" Style="{StaticResource HotkeyBoxStyle}" Tag="PanicReset" IsReadOnly="True" PreviewKeyDown="HotkeyBox_PreviewKeyDown"/>
+                                    <Button Grid.Column="2" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="10" Style="{StaticResource ActionButtonStyle}" Click="ClearHotkey_Click" Tag="PanicReset"/>
+                                </Grid>
+                            </Border>
+
+                            <TextBlock Text="EXTRA FEATURES" Foreground="#999999" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,12" Margin="0,0,0,4">
+                                <CheckBox x:Name="CbMuteMode" Content="Enable Mute Mode" Style="{StaticResource ToggleSwitchStyle}"/>
+                            </Border>
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,12" Margin="0,0,0,4">
+                                <CheckBox x:Name="CbSoloMode" Content="Enable Solo Mode" Style="{StaticResource ToggleSwitchStyle}"/>
+                            </Border>
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,12" Margin="0,0,0,4">
+                                <CheckBox x:Name="CbPanicMode" Content="Enable Panic Mode" Style="{StaticResource ToggleSwitchStyle}"/>
+                            </Border>
+                            <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15,12" Margin="0,0,0,4">
+                                <CheckBox x:Name="CbTrackpadGesture" Content="Enable 4-Finger Trackpad Gesture" Style="{StaticResource ToggleSwitchStyle}"/>
+                            </Border>
+
+                            <Button Content="Save Changes" Style="{StaticResource AccentOutlineButtonStyle}" 
+                                    Margin="0,20,0,20" HorizontalAlignment="Right" Click="SaveButton_Click"/>
                         </StackPanel>
                     </ScrollViewer>
+
                     <Grid x:Name="PanelAdvanced" Visibility="Collapsed">
                         <StackPanel>
-                            <TextBlock Text="DANGER ZONE" Foreground="#FF6B6B" FontSize="12" FontWeight="Bold" Margin="0,0,0,10"/>
-                            <Border BorderBrush="#FF6B6B" BorderThickness="1" Background="#2A2F36" CornerRadius="8" Padding="15">
+                            <TextBlock Text="DANGER ZONE" Foreground="#FF6B6B" FontSize="11" FontWeight="SemiBold" Margin="0,10,0,10"/>
+                            <Border BorderBrush="#55FF6B6B" BorderThickness="1" Background="#0FFFFFFF" CornerRadius="4" Padding="15,20">
                                 <Grid>
                                     <StackPanel>
-                                        <TextBlock Text="Reset Utility" Foreground="White" FontWeight="Bold"/>
-                                        <TextBlock Text="Permanently restore all settings and hotkeys to defaults." Foreground="#AAAAAA" FontSize="11" Margin="0,4,0,0"/>
+                                        <TextBlock Text="Reset Utility" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
+                                        <TextBlock Text="Permanently restore all settings and hotkeys to defaults." Foreground="#AAAAAA" FontSize="12" Margin="0,4,0,0"/>
                                     </StackPanel>
                                     <Button Content="RESET SETTINGS" Background="Transparent" Foreground="#FF6B6B" 
-                                            BorderBrush="#FF6B6B" BorderThickness="1" Padding="15,5"
-                                            HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold"
-                                            Click="ResetButton_Click" Cursor="Hand"/>
+                                            BorderBrush="#FF6B6B" BorderThickness="0" Padding="25,12"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="SemiBold"
+                                            Click="ResetButton_Click" Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="ResetBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ResetBorder" Property="Background" Value="#1AFF6B6B"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="ResetBorder" Property="Background" Value="#33FF6B6B"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
                                 </Grid>
                             </Border>
                         </StackPanel>
                     </Grid>
+
                     <ScrollViewer x:Name="PanelHelp" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
                         <Grid>
-                            <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                    Margin="0,0,5,0" Width="30" Height="30"
+                            <Button Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Margin="0,0,5,0" Width="30" Height="30" FontSize="12"
                                     Style="{StaticResource ActionButtonStyle}" Click="CloseHelp_Click" ToolTip="Back"/>
-                            <StackPanel Margin="0,35,0,0">
-                                <TextBlock Text="HOW TO USE" Foreground="#00ADEF" FontSize="12" FontWeight="Bold" Margin="0,0,0,10"/>
-                                <Border Background="#2A2F36" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Text="HOW TO USE" Foreground="#999999" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="20" Margin="0,0,0,10">
                                     <TextBlock Text="1. Hold Ctrl and Scroll your mouse wheel while an app is active to change its volume.&#x0a;2. Use the hotkeys configured in the General tab to perform quick actions.&#x0a;3. Press Ctrl + Alt + V to toggle the main mixer UI." 
-                                               Foreground="White" TextWrapping="Wrap"/>
+                                               Foreground="#DDDDDD" FontSize="13" TextWrapping="Wrap" LineHeight="24"/>
                                 </Border>
-                                <Border Background="#2A2F36" CornerRadius="8" Padding="15" Height="150">
+                                <Border Background="#0FFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="4" Padding="15" Height="150">
                                     <TextBlock Text="[ Pictorial Views / Diagrams will go here ]" Foreground="#555555" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                             </StackPanel>
                         </Grid>
                     </ScrollViewer>
+
                     <Grid x:Name="PanelAbout" Visibility="Collapsed">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="Volume Mixer Pro" Foreground="White" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Version 2.0" Foreground="#00ADEF" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,20"/>
-                            <TextBlock Text="Designed &amp; Developed for premium audio control." Foreground="#AAAAAA" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Volume Mixer Pro" Foreground="White" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" FontFamily="Segoe UI Variable Display, Segoe UI"/>
+                            <TextBlock Text="Version 2.0" Foreground="#60CDFF" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,5,0,20"/>
+                            <TextBlock Text="Designed &amp; Developed for premium audio control." Foreground="#AAAAAA" FontSize="13" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
+
                 </Grid>
             </Grid>
         </Grid>

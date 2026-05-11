@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 namespace VolumeMixerPro
 {
     public partial class MainWindow : Window
@@ -21,6 +22,8 @@ namespace VolumeMixerPro
         private bool _isDragging = false;
         private bool _isSettingsOpen = false;
         private TrackpadService _trackpadService;
+        private SettingsWindow _settingsWin;
+        private bool _isAnimatingSettings = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -61,18 +64,78 @@ namespace VolumeMixerPro
         }
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenSettings(0);
+            if (_isAnimatingSettings) return;
+
+            if (_isSettingsOpen)
+            {
+                CloseSettings();
+            }
+            else
+            {
+                OpenSettings(0);
+            }
         }
-        public void OpenSettings(int tabIndex)
+
+        public async void OpenSettings(int tabIndex)
         {
+            if (_isSettingsOpen || _isAnimatingSettings) return;
+            
+            _isAnimatingSettings = true;
             _isSettingsOpen = true;
             _lastInteraction = DateTime.Now; 
             _updateTimer.Stop();
-            var settingsWin = new SettingsWindow(tabIndex) { Owner = this };
-            settingsWin.ShowDialog();
-            _isSettingsOpen = false;
-            _lastInteraction = DateTime.Now;
-            _updateTimer.Start();
+
+            if (SettingsIcon.RenderTransform is System.Windows.Media.RotateTransform rotateTransform)
+            {
+                var anim = new DoubleAnimation(0, 360, TimeSpan.FromMilliseconds(400))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+                };
+                rotateTransform.BeginAnimation(System.Windows.Media.RotateTransform.AngleProperty, anim);
+                await Task.Delay(200);
+            }
+
+            _settingsWin = new SettingsWindow(tabIndex) { Owner = this };
+            _settingsWin.OnRequestClose = CloseSettings;
+            _settingsWin.ShowWithAnimation();
+            
+            _isAnimatingSettings = false;
+        }
+
+        public void CloseSettings()
+        {
+            if (!_isSettingsOpen || _isAnimatingSettings) return;
+            
+            _isAnimatingSettings = true;
+
+            if (SettingsIcon.RenderTransform is System.Windows.Media.RotateTransform rotateTransform)
+            {
+                var anim = new DoubleAnimation(360, 0, TimeSpan.FromMilliseconds(400))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+                };
+                rotateTransform.BeginAnimation(System.Windows.Media.RotateTransform.AngleProperty, anim);
+            }
+
+            if (_settingsWin != null)
+            {
+                _settingsWin.IsClosingForReal = true;
+                _settingsWin.HideWithAnimation(() => 
+                {
+                    _settingsWin.Close();
+                    _settingsWin = null;
+                    _isSettingsOpen = false;
+                    _isAnimatingSettings = false;
+                    _lastInteraction = DateTime.Now;
+                    _updateTimer.Start();
+                });
+            }
+            else
+            {
+                _isSettingsOpen = false;
+                _isAnimatingSettings = false;
+                _updateTimer.Start();
+            }
         }
         private void UpdateFooterText()
         {

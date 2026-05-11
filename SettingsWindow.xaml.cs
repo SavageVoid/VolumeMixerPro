@@ -2,10 +2,14 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 namespace VolumeMixerPro
 {
     public partial class SettingsWindow : Window
     {
+        public Action OnRequestClose;
+        public bool IsClosingForReal = false;
+
         public SettingsWindow(int tabIndex = 0)
         {
             InitializeComponent();
@@ -34,7 +38,38 @@ namespace VolumeMixerPro
         }
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            OnRequestClose?.Invoke();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            if (!IsClosingForReal)
+            {
+                e.Cancel = true;
+                OnRequestClose?.Invoke();
+            }
+            base.OnClosing(e);
+        }
+
+        public void ShowWithAnimation()
+        {
+            this.Visibility = Visibility.Visible;
+            this.Opacity = 0;
+            var anim = new DoubleAnimation(1, TimeSpan.FromMilliseconds(200))
+            {
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+            };
+            this.BeginAnimation(OpacityProperty, anim);
+        }
+
+        public void HideWithAnimation(Action onCompleted)
+        {
+            var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(200))
+            {
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+            };
+            anim.Completed += (s, e) => onCompleted?.Invoke();
+            this.BeginAnimation(OpacityProperty, anim);
         }
         private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -44,6 +79,11 @@ namespace VolumeMixerPro
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
             if (PanelHelp == null) return;
+            if (PanelHelp.Visibility == Visibility.Visible)
+            {
+                CloseHelp_Click(null, null);
+                return;
+            }
             PanelGeneral.Visibility = Visibility.Collapsed;
             PanelAdvanced.Visibility = Visibility.Collapsed;
             PanelAbout.Visibility = Visibility.Collapsed;

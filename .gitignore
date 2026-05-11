@@ -48,3 +48,5 @@ VolumeService.cs
 *.exe
 *.ahk
 settings.xml
+implementation_plan.md
+.gitignore
