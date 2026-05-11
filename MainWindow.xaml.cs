@@ -20,6 +20,7 @@ namespace VolumeMixerPro
         private bool _isUpdatingFromSource = false;
         private bool _isDragging = false;
         private bool _isSettingsOpen = false;
+        private TrackpadService _trackpadService;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +41,14 @@ namespace VolumeMixerPro
             };
             this.Loaded += (s, e) => {
                 PositionWindow();
+                var hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+                _trackpadService = new TrackpadService(hwnd);
+                _trackpadService.OnGestureScroll += (dir) => {
+                    if (SettingsManager.Current.EnableTrackpadGesture)
+                        HandleVolumeScroll(dir);
+                };
+                var source = System.Windows.Interop.HwndSource.FromHwnd(hwnd);
+                if (source != null) source.AddHook(WndProc);
                 this.Visibility = Visibility.Collapsed;
                 this.Opacity = 0;
                 _overlayWindow.Show();
@@ -71,6 +80,14 @@ namespace VolumeMixerPro
                 var s = SettingsManager.Current;
                 FooterText.Text = $"Ctrl + Scroll  •  {s.ToggleMenu}  •  {s.MuteActive}";
             });
+        }
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == 0x00FF) 
+            {
+                _trackpadService?.ProcessMessage(lParam);
+            }
+            return IntPtr.Zero;
         }
         private void PositionWindow()
         {
@@ -105,6 +122,12 @@ namespace VolumeMixerPro
             };
             this.BeginAnimation(OpacityProperty, anim);
             _updateTimer.Start();
+        }
+        protected override void OnClosed(EventArgs e)
+        {
+            _trackpadService?.Dispose();
+            _hotkeyService?.Dispose();
+            base.OnClosed(e);
         }
         private void HideWithAnimation()
         {
@@ -330,11 +353,6 @@ namespace VolumeMixerPro
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             HideWithAnimation();
-        }
-        protected override void OnClosed(EventArgs e)
-        {
-            _hotkeyService.Dispose();
-            base.OnClosed(e);
         }
     }
 }

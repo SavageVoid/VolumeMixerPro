@@ -85,6 +85,7 @@ namespace VolumeMixerPro
             CbMuteMode.IsChecked = s.EnableMuteMode;
             CbSoloMode.IsChecked = s.EnableSoloMode;
             CbPanicMode.IsChecked = s.EnablePanicMode;
+            CbTrackpadGesture.IsChecked = s.EnableTrackpadGesture;
         }
         private void ClearHotkey_Click(object sender, RoutedEventArgs e)
         {
@@ -172,6 +173,7 @@ namespace VolumeMixerPro
             s.EnableMuteMode = CbMuteMode.IsChecked ?? true;
             s.EnableSoloMode = CbSoloMode.IsChecked ?? true;
             s.EnablePanicMode = CbPanicMode.IsChecked ?? true;
+            s.EnableTrackpadGesture = CbTrackpadGesture.IsChecked ?? false;
             SettingsManager.Save();
             MessageBox.Show("Settings saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }

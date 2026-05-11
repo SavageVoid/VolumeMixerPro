@@ -16,6 +16,7 @@ namespace VolumeMixerPro
         private LowLevelProc _mouseProc;
         private IntPtr _keyboardHookId = IntPtr.Zero;
         private IntPtr _mouseHookId = IntPtr.Zero;
+        public static bool Is4FingerGestureActive { get; set; }
         public event Action<int> OnVolumeScroll; 
         public event Action OnToggleMenu;
         public event Action OnMuteActive;
@@ -39,37 +40,45 @@ namespace VolumeMixerPro
         }
         private IntPtr KeyboardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
+            if (nCode >= 0)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-                bool ctrl = (GetKeyState(0x11) & 0x8000) != 0;
-                bool alt = (GetKeyState(0x12) & 0x8000) != 0;
-                bool shift = (GetKeyState(0x10) & 0x8000) != 0;
-                var s = SettingsManager.Current;
-                if (s.ToggleMenu.Matches(vkCode, ctrl, alt, shift))
+                if (Is4FingerGestureActive)
                 {
-                    OnToggleMenu?.Invoke();
-                    return (IntPtr)1;
+                    if (vkCode == 0x5B || vkCode == 0x5C || vkCode == 0x09 || vkCode == 0x44 || vkCode == 0x25 || vkCode == 0x27)
+                        return (IntPtr)1;
                 }
-                if (s.EnableMuteMode && s.MuteActive.Matches(vkCode, ctrl, alt, shift))
+                if (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
                 {
-                    OnMuteActive?.Invoke();
-                    return (IntPtr)1;
-                }
-                if (s.EnableSoloMode && s.SoloMode.Matches(vkCode, ctrl, alt, shift))
-                {
-                    OnSoloMode?.Invoke();
-                    return (IntPtr)1;
-                }
-                if (s.UnmuteAll.Matches(vkCode, ctrl, alt, shift))
-                {
-                    OnUnmuteAll?.Invoke();
-                    return (IntPtr)1;
-                }
-                if (s.EnablePanicMode && s.PanicReset.Matches(vkCode, ctrl, alt, shift))
-                {
-                    OnPanicReset?.Invoke();
-                    return (IntPtr)1;
+                    bool ctrl = (GetKeyState(0x11) & 0x8000) != 0;
+                    bool alt = (GetKeyState(0x12) & 0x8000) != 0;
+                    bool shift = (GetKeyState(0x10) & 0x8000) != 0;
+                    var s = SettingsManager.Current;
+                    if (s.ToggleMenu.Matches(vkCode, ctrl, alt, shift))
+                    {
+                        OnToggleMenu?.Invoke();
+                        return (IntPtr)1;
+                    }
+                    if (s.EnableMuteMode && s.MuteActive.Matches(vkCode, ctrl, alt, shift))
+                    {
+                        OnMuteActive?.Invoke();
+                        return (IntPtr)1;
+                    }
+                    if (s.EnableSoloMode && s.SoloMode.Matches(vkCode, ctrl, alt, shift))
+                    {
+                        OnSoloMode?.Invoke();
+                        return (IntPtr)1;
+                    }
+                    if (s.UnmuteAll.Matches(vkCode, ctrl, alt, shift))
+                    {
+                        OnUnmuteAll?.Invoke();
+                        return (IntPtr)1;
+                    }
+                    if (s.EnablePanicMode && s.PanicReset.Matches(vkCode, ctrl, alt, shift))
+                    {
+                        OnPanicReset?.Invoke();
+                        return (IntPtr)1;
+                    }
                 }
             }
             return CallNextHookEx(_keyboardHookId, nCode, wParam, lParam);

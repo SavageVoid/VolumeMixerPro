@@ -42,6 +42,7 @@ namespace VolumeMixerPro
         public bool EnablePanicMode { get; set; } = true;
         public bool EnableSoloMode { get; set; } = true;
         public bool EnableMuteMode { get; set; } = true;
+        public bool EnableTrackpadGesture { get; set; } = false;
     }
     public static class SettingsManager
     {

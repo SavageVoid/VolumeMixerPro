@@ -92,7 +92,9 @@
                                     <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
                                     <CheckBox x:Name="CbSoloMode" Content="Enable Solo Mode" Foreground="White" Margin="0,0,0,10"/>
                                     <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-                                    <CheckBox x:Name="CbPanicMode" Content="Enable Panic Mode" Foreground="White" Margin="0,0,0,0"/>
+                                    <CheckBox x:Name="CbPanicMode" Content="Enable Panic Mode" Foreground="White" Margin="0,0,0,10"/>
+                                    <Border BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
+                                    <CheckBox x:Name="CbTrackpadGesture" Content="Enable 4-Finger Trackpad Gesture" Foreground="White" Margin="0,0,0,0"/>
                                 </StackPanel>
                             </Border>
                             <Button Content="SAVE CHANGES" Background="#00ADEF" Foreground="White" 
