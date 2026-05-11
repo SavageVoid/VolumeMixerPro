@@ -1,99 +1,87 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using Application = System.Windows.Application;
-
 namespace VolumeMixerPro
 {
     public partial class App : Application
     {
-        private NotifyIcon _notifyIcon;
-        private static Mutex _mutex = null;
-
+        private NotifyIcon   _notifyIcon;
+        private static Mutex _mutex;
+        private MainWindow   _mainWindow;
         protected override void OnStartup(StartupEventArgs e)
         {
-            // 1. CRITICAL: Admin check BEFORE anything else to prevent flashing
-            if (!IsRunningAsAdmin())
+            if (!IsAdmin())
             {
-                RestartAsAdmin();
+                RelaunchAsAdmin();
                 return;
             }
-
-            // 2. Single Instance check
-            const string appName = "VolumeMixerPro_SingleInstance_v2";
-            bool createdNew;
-            _mutex = new Mutex(true, appName, out createdNew);
-
+            _mutex = new Mutex(true, "VolumeMixerPro_v3", out bool createdNew);
             if (!createdNew)
             {
-                System.Windows.MessageBox.Show("Volume Mixer Pro is already running.", "Notice");
-                Application.Current.Shutdown();
+                System.Windows.MessageBox.Show("Volume Mixer Pro is already running.",
+                    "Notice", MessageBoxButton.OK, MessageBoxImage.Information);
+                Shutdown();
                 return;
             }
-
             base.OnStartup(e);
-
-            // 3. Tray Icon Setup
-            _notifyIcon = new NotifyIcon();
-            _notifyIcon.Icon = System.Drawing.SystemIcons.Shield;
-            _notifyIcon.Visible = true;
-            _notifyIcon.Text = "Volume Mixer Pro";
-            
-            // Notification to confirm it's running
-            _notifyIcon.ShowBalloonTip(2000, "Volume Mixer Pro", "Utility is active and ready.", ToolTipIcon.Info);
-
-            _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
-            _notifyIcon.ContextMenuStrip.Items.Add("Show Mixer (Ctrl+Alt+V)", null, (s, ev) => {
-                (MainWindow as MainWindow)?.ToggleMenu();
-            });
-            _notifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, ev) => {
-                Shutdown();
-            });
-
-            _notifyIcon.DoubleClick += (s, ev) => {
-                (MainWindow as MainWindow)?.ToggleMenu();
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            _mainWindow = new MainWindow();
+            MainWindow  = _mainWindow;
+            new WindowInteropHelper(_mainWindow).EnsureHandle();
+            _notifyIcon = new NotifyIcon
+            {
+                Icon    = System.Drawing.SystemIcons.Application,
+                Visible = true,
+                Text    = "Volume Mixer Pro"
             };
+            _notifyIcon.ShowBalloonTip(2000, "Volume Mixer Pro",
+                "Running in system tray. Press Ctrl+Alt+V to open.", ToolTipIcon.Info);
+            var menu = new ContextMenuStrip();
+            menu.Items.Add("Open Mixer  (Ctrl+Alt+V)", null, (s, ev) =>
+                Dispatcher.Invoke(() => _mainWindow.ToggleMenu()));
+            menu.Items.Add("-");
+            menu.Items.Add("Exit", null, (s, ev) =>
+                Dispatcher.Invoke(() => Shutdown()));
+            _notifyIcon.ContextMenuStrip = menu;
+            _notifyIcon.DoubleClick     += (s, ev) =>
+                Dispatcher.Invoke(() => _mainWindow.ToggleMenu());
         }
-
-        private bool IsRunningAsAdmin()
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _notifyIcon?.Dispose();
+            try { _mutex?.ReleaseMutex(); } catch { }
+            _mutex?.Dispose();
+            base.OnExit(e);
+        }
+        private static bool IsAdmin()
         {
             try
             {
-                var identity = WindowsIdentity.GetCurrent();
-                var principal = new WindowsPrincipal(identity);
+                var id        = WindowsIdentity.GetCurrent();
+                var principal = new WindowsPrincipal(id);
                 return principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
             catch { return false; }
         }
-
-        private void RestartAsAdmin()
+        private static void RelaunchAsAdmin()
         {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = Process.GetCurrentProcess().MainModule.FileName,
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-
             try
             {
-                Process.Start(startInfo);
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName        = Process.GetCurrentProcess().MainModule.FileName,
+                    UseShellExecute = true,
+                    Verb            = "runas"
+                });
             }
             catch { }
-            Application.Current.Shutdown();
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            if (_notifyIcon != null) _notifyIcon.Dispose();
-            if (_mutex != null)
-            {
-                try { _mutex.ReleaseMutex(); } catch { }
-            }
-            base.OnExit(e);
+            Current.Shutdown();
         }
     }
 }

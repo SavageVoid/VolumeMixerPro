@@ -12,14 +12,12 @@
         TextOptions.TextRenderingMode="ClearType"
         RenderOptions.BitmapScalingMode="HighQuality"
         Visibility="Collapsed" Opacity="0">
-    
     <Window.Resources>
         <Style x:Key="AppSliderStyle" TargetType="Slider">
             <Setter Property="Background" Value="#2A2F36"/>
             <Setter Property="Foreground" Value="#4CAF50"/>
             <Setter Property="Height" Value="20"/>
         </Style>
-
         <Style x:Key="ActionButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
@@ -37,7 +35,6 @@
             </Setter>
         </Style>
     </Window.Resources>
-
     <Border BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="12">
         <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -51,8 +48,6 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="45"/>
             </Grid.RowDefinitions>
-
-            <!-- Header -->
             <Border Grid.Row="0" Background="#1C2128" CornerRadius="12,12,0,0">
                 <Grid>
                     <TextBlock Text="🔊  Volume Mixer Pro" Foreground="White" 
@@ -63,13 +58,9 @@
                             Style="{StaticResource ActionButtonStyle}" Click="CloseButton_Click"/>
                 </Grid>
             </Border>
-
-            <!-- Content -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel Name="SessionsContainer" Margin="15,10"/>
             </ScrollViewer>
-
-            <!-- Footer -->
             <Border Grid.Row="2" Background="#1C2128" CornerRadius="0,0,12,12">
                 <TextBlock Text="Ctrl + Scroll  •  Ctrl + Alt + V  •  Ctrl + Alt + M" 
                            Foreground="#B8BCC8" FontSize="10"

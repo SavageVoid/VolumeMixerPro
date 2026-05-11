@@ -1,70 +1,87 @@
 using System;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
 namespace VolumeMixerPro
 {
     public partial class OverlayWindow : Window
     {
-        private DispatcherTimer _hideTimer;
-        private double _targetX;
-        private double _targetY;
-
+        private readonly DispatcherTimer _hideTimer;
+        private bool _hasBeenShown = false;
+        private double _maxFillWidth;
+        private readonly DoubleAnimation _showAnim;
+        private readonly DoubleAnimation _hideAnim;
         public OverlayWindow()
         {
             InitializeComponent();
-            _hideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-            _hideTimer.Tick += (s, e) => HideWithAnimation();
-
-            this.Loaded += (s, e) => {
-                WindowHelper.ApplyModernStyle(this);
-                // Position in the void
-                this.Left = -5000;
-                this.Top = -5000;
+            _showAnim = new DoubleAnimation(0d, 1d, TimeSpan.FromMilliseconds(150))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
+            _hideAnim = new DoubleAnimation(1d, 0d, TimeSpan.FromMilliseconds(250))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            };
+            _hideAnim.Completed += (s, e) => this.Visibility = Visibility.Hidden;
+            _hideTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1800) };
+            _hideTimer.Tick += (s, e) => { _hideTimer.Stop(); HideWithAnimation(); };
+            this.SourceInitialized += (s, e) =>
+            {
+                WindowHelper.ApplyRoundedCorners(this);
+                PositionWindow();
+            };
+            this.SizeChanged += (s, e) => _maxFillWidth = ActualWidth - 28; 
         }
-
-        private void CalculatePosition()
+        public void ShowVolume(string appName, float volume,
+                               ImageSource icon = null)
         {
-            var desktopWorkingArea = SystemParameters.WorkArea;
-            _targetX = desktopWorkingArea.Right - this.Width - 20;
-            _targetY = 40;
-        }
-
-        public void ShowVolume(string appName, float volume)
-        {
-            Dispatcher.Invoke(() => {
-                AppNameText.Text = appName.ToUpper();
-                VolumeText.Text = $"{(int)volume}%";
-                
-                int filled = (int)Math.Round(volume / 5);
-                string bar = new string('█', filled) + new string('▒', 20 - filled);
-                AsciiBar.Text = bar;
-
-                CalculatePosition();
-                this.Left = _targetX;
-                this.Top = _targetY;
-                
-                // Force visibility and opacity
-                this.Visibility = Visibility.Visible;
-                this.Opacity = 1;
-                MainBorder.Opacity = 1;
-
+            Dispatcher.Invoke(() =>
+            {
+                MainBorder.BeginAnimation(OpacityProperty, null);
+                AppNameText.Text = appName;
+                if (icon != null)
+                {
+                    AppIconImage.Source     = icon;
+                    AppIconImage.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    AppIconImage.Visibility = Visibility.Collapsed;
+                }
+                int pct = (int)Math.Round(volume);
+                VolumeText.Text = $"{pct}%";
+                double targetWidth = (_maxFillWidth > 0 ? _maxFillWidth : 232) * volume / 100.0;
+                VolumeFill.Width = targetWidth;
+                VolumeFill.Background = volume > 90
+                    ? new SolidColorBrush(Color.FromRgb(0xFF, 0x6B, 0x6B))
+                    : volume > 70
+                        ? new SolidColorBrush(Color.FromRgb(0xFF, 0xB3, 0x00))
+                        : new SolidColorBrush(Color.FromRgb(0x00, 0xAD, 0xEF));
+                if (!_hasBeenShown)
+                {
+                    PositionWindow();
+                    this.Show();
+                    _hasBeenShown = true;
+                }
+                this.Visibility  = Visibility.Visible;
+                MainBorder.Opacity = 0;
+                MainBorder.BeginAnimation(OpacityProperty, _showAnim);
                 _hideTimer.Stop();
                 _hideTimer.Start();
             });
         }
-
         private void HideWithAnimation()
         {
-            var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(300));
-            anim.Completed += (s, e) => {
-                this.Left = -5000;
-                this.Opacity = 0;
-            };
-            MainBorder.BeginAnimation(OpacityProperty, anim);
-            _hideTimer.Stop();
+            MainBorder.BeginAnimation(OpacityProperty, null);
+            MainBorder.Opacity = 1;
+            MainBorder.BeginAnimation(OpacityProperty, _hideAnim);
+        }
+        private void PositionWindow()
+        {
+            var area = SystemParameters.WorkArea;
+            this.Left = area.Right  - this.Width  - 20;
+            this.Top  = area.Top    + 40;
         }
     }
 }
