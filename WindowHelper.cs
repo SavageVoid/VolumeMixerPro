@@ -56,12 +56,6 @@ namespace VolumeMixerPro
         }
         private static void ApplyRoundedCorners(IntPtr hwnd)
         {
-            try
-            {
-                int pref = DWMWCP_ROUND;
-                DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, ref pref, sizeof(int));
-            }
-            catch {  }
         }
         private static void ApplyBackdrop(IntPtr hwnd)
         {

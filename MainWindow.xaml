@@ -6,36 +6,21 @@
         xmlns:local="clr-namespace:VolumeMixerPro"
         mc:Ignorable="d"
         Title="Volume Mixer Pro" Height="450" Width="380"
-        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStyle="None" AllowsTransparency="True"
         ResizeMode="NoResize" Topmost="True" ShowInTaskbar="False"
         TextOptions.TextFormattingMode="Display"
         TextOptions.TextRenderingMode="ClearType"
         RenderOptions.BitmapScalingMode="HighQuality"
-        Visibility="Collapsed" Opacity="0">
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        Visibility="Collapsed" Opacity="0" Background="Transparent">
     <Window.Resources>
         <Style x:Key="AppSliderStyle" TargetType="Slider">
             <Setter Property="Background" Value="#2A2F36"/>
             <Setter Property="Foreground" Value="#4CAF50"/>
             <Setter Property="Height" Value="20"/>
         </Style>
-        <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#CCCCCC"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
-    <Border BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="12">
+    <Border BorderThickness="0" CornerRadius="12">
         <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF1C2128" Offset="0"/>
@@ -45,7 +30,9 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="1"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="1"/>
                 <RowDefinition Height="45"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Background="#1C2128" CornerRadius="12,12,0,0">
@@ -53,16 +40,21 @@
                     <TextBlock Text="🔊  Volume Mixer Pro" Foreground="White" 
                                FontSize="16" FontWeight="SemiBold"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Center"
-                            Margin="0,0,15,0" Width="30" Height="30"
-                            Style="{StaticResource ActionButtonStyle}" Click="CloseButton_Click"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <Button Content="⚙️" Width="30" Height="30" Margin="0,0,5,0"
+                                Style="{StaticResource ActionButtonStyle}" Click="SettingsButton_Click" ToolTip="Settings"/>
+                        <Button Content="✕" Width="30" Height="30"
+                                Style="{StaticResource ActionButtonStyle}" Click="CloseButton_Click"/>
+                    </StackPanel>
                 </Grid>
             </Border>
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Border Grid.Row="1" BorderBrush="#11FFFFFF" BorderThickness="0,0,0,1"/>
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                 <StackPanel Name="SessionsContainer" Margin="15,10"/>
             </ScrollViewer>
-            <Border Grid.Row="2" Background="#1C2128" CornerRadius="0,0,12,12">
-                <TextBlock Text="Ctrl + Scroll  •  Ctrl + Alt + V  •  Ctrl + Alt + M" 
+            <Border Grid.Row="3" BorderBrush="#11FFFFFF" BorderThickness="0,1,0,0"/>
+            <Border Grid.Row="4" Background="#1C2128" CornerRadius="0,0,12,12">
+                <TextBlock x:Name="FooterText" Text="Ctrl + Scroll  •  Ctrl + Alt + V  •  Ctrl + Alt + M" 
                            Foreground="#B8BCC8" FontSize="10"
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>

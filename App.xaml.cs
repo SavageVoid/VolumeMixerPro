@@ -29,6 +29,7 @@ namespace VolumeMixerPro
                 Shutdown();
                 return;
             }
+            SettingsManager.Load();
             base.OnStartup(e);
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             _mainWindow = new MainWindow();
@@ -45,6 +46,10 @@ namespace VolumeMixerPro
             var menu = new ContextMenuStrip();
             menu.Items.Add("Open Mixer  (Ctrl+Alt+V)", null, (s, ev) =>
                 Dispatcher.Invoke(() => _mainWindow.ToggleMenu()));
+            menu.Items.Add("Utility Setting", null, (s, ev) =>
+                Dispatcher.Invoke(() => _mainWindow.OpenSettings(0)));
+            menu.Items.Add("About", null, (s, ev) =>
+                Dispatcher.Invoke(() => _mainWindow.OpenSettings(3)));
             menu.Items.Add("-");
             menu.Items.Add("Exit", null, (s, ev) =>
                 Dispatcher.Invoke(() => Shutdown()));

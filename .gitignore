@@ -47,3 +47,4 @@ VolumeService.cs
 #extra
 *.exe
 *.ahk
+settings.xml

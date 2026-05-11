@@ -45,27 +45,28 @@ namespace VolumeMixerPro
                 bool ctrl = (GetKeyState(0x11) & 0x8000) != 0;
                 bool alt = (GetKeyState(0x12) & 0x8000) != 0;
                 bool shift = (GetKeyState(0x10) & 0x8000) != 0;
-                if (ctrl && alt && vkCode == (int)KeyInterop.VirtualKeyFromKey(Key.V))
+                var s = SettingsManager.Current;
+                if (s.ToggleMenu.Matches(vkCode, ctrl, alt, shift))
                 {
                     OnToggleMenu?.Invoke();
-                    return (IntPtr)1; 
+                    return (IntPtr)1;
                 }
-                if (ctrl && alt && !shift && vkCode == (int)KeyInterop.VirtualKeyFromKey(Key.M))
+                if (s.EnableMuteMode && s.MuteActive.Matches(vkCode, ctrl, alt, shift))
                 {
                     OnMuteActive?.Invoke();
                     return (IntPtr)1;
                 }
-                if (ctrl && alt && shift && vkCode == (int)KeyInterop.VirtualKeyFromKey(Key.M))
+                if (s.EnableSoloMode && s.SoloMode.Matches(vkCode, ctrl, alt, shift))
                 {
                     OnSoloMode?.Invoke();
                     return (IntPtr)1;
                 }
-                if (ctrl && alt && vkCode == (int)KeyInterop.VirtualKeyFromKey(Key.D0))
+                if (s.UnmuteAll.Matches(vkCode, ctrl, alt, shift))
                 {
                     OnUnmuteAll?.Invoke();
                     return (IntPtr)1;
                 }
-                if (ctrl && alt && (vkCode == (int)KeyInterop.VirtualKeyFromKey(Key.P) || vkCode == (int)KeyInterop.VirtualKeyFromKey(Key.R)))
+                if (s.EnablePanicMode && s.PanicReset.Matches(vkCode, ctrl, alt, shift))
                 {
                     OnPanicReset?.Invoke();
                     return (IntPtr)1;

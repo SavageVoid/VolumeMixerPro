@@ -19,9 +19,11 @@ namespace VolumeMixerPro
         private DateTime _lastInteraction;
         private bool _isUpdatingFromSource = false;
         private bool _isDragging = false;
+        private bool _isSettingsOpen = false;
         public MainWindow()
         {
             InitializeComponent();
+            this.Background = null;
             _volumeService = new VolumeService();
             _hotkeyService = new HotkeyService();
             _overlayWindow = new OverlayWindow();
@@ -37,14 +39,38 @@ namespace VolumeMixerPro
                 CheckIdle();
             };
             this.Loaded += (s, e) => {
-                WindowHelper.ApplyModernStyle(this);
                 PositionWindow();
                 this.Visibility = Visibility.Collapsed;
                 this.Opacity = 0;
                 _overlayWindow.Show();
                 _overlayWindow.Visibility = Visibility.Hidden; 
+                UpdateFooterText();
+                this.Background = System.Windows.Media.Brushes.Transparent;
             };
+            SettingsManager.OnSettingsChanged += UpdateFooterText;
             _lastInteraction = DateTime.Now;
+        }
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenSettings(0);
+        }
+        public void OpenSettings(int tabIndex)
+        {
+            _isSettingsOpen = true;
+            _lastInteraction = DateTime.Now; 
+            _updateTimer.Stop();
+            var settingsWin = new SettingsWindow(tabIndex) { Owner = this };
+            settingsWin.ShowDialog();
+            _isSettingsOpen = false;
+            _lastInteraction = DateTime.Now;
+            _updateTimer.Start();
+        }
+        private void UpdateFooterText()
+        {
+            Dispatcher.Invoke(() => {
+                var s = SettingsManager.Current;
+                FooterText.Text = $"Ctrl + Scroll  •  {s.ToggleMenu}  •  {s.MuteActive}";
+            });
         }
         private void PositionWindow()
         {
@@ -54,6 +80,7 @@ namespace VolumeMixerPro
         }
         public void ToggleMenu()
         {
+            if (_isSettingsOpen) return;
             Dispatcher.Invoke(() =>
             {
                 if (this.Visibility == Visibility.Visible)
@@ -81,6 +108,7 @@ namespace VolumeMixerPro
         }
         private void HideWithAnimation()
         {
+            if (_isSettingsOpen) return;
             var anim = new DoubleAnimation(0, TimeSpan.FromMilliseconds(200))
             {
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
@@ -127,7 +155,7 @@ namespace VolumeMixerPro
                 }
             }
             _isUpdatingFromSource = false;
-            this.Height = 110 + (_sessionRows.Count * 85);
+            this.Height = 112 + (_sessionRows.Count * 85);
         }
         private FrameworkElement CreateSessionRow(AudioSessionModel session)
         {
@@ -183,7 +211,7 @@ namespace VolumeMixerPro
             var muteBtn = new Button
             {
                 Content = session.IsMuted ? "🔇" : "🔊",
-                Style = (Style)Resources["ActionButtonStyle"],
+                Style = (Style)FindResource("ActionButtonStyle"),
                 FontSize = 18,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center
@@ -272,7 +300,7 @@ namespace VolumeMixerPro
         }
         private void CheckIdle()
         {
-            if (_isDragging) 
+            if (_isSettingsOpen || _isDragging) 
             {
                 _lastInteraction = DateTime.Now;
                 return;
