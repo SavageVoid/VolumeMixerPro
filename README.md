@@ -1,4 +1,4 @@
-# Volume Mixer Pro (C# Edition)
+# Volume Mixer Pro (C# .NETx4.8)
 
 A high-performance, native Windows audio utility designed to replace and exceed the functionality of the original AutoHotkey Volume Mixer. 
 
