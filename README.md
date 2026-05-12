@@ -1,5 +1,7 @@
 # Volume Mixer Pro (C# .NETx4.8)
 
+![Volume Mixer Pro Hero](assets/hero.png)
+
 A high-performance, native Windows audio utility designed to replace and exceed the functionality of the original AutoHotkey Volume Mixer. 
 
 ## Features
@@ -12,7 +14,16 @@ A high-performance, native Windows audio utility designed to replace and exceed 
   - `Ctrl + Alt + M`: Mute active app
   - `Ctrl + Alt + Shift + M`: Solo mode (Mute others)
   - `Ctrl + Alt + P / R`: Panic Reset (50% Volume)
-- **Premium Aesthetics:** Fluent Design with Glassmorphism and real application icon extraction.
+- **Trackpad Integration:** Support for 4-finger gestures for advanced system-wide volume interaction.
+- **Premium Win11 Architecture:** Modern tile-based settings layout with Segoe Fluent iconography and frosted glass (Mica) effects.
+- **Custom Sliding Controls:** Native-feel sliding toggle switches, tactile bounce animations, and a spring-wobble help interface.
+
+## Visuals
+<p align="center">
+  <img src="assets/MainOverlay.png" width="800" alt="Main Interface">
+  <br>
+  <em>Premium Dark Mode Interface with Native Win Design</em>
+</p>
 
 ## Technical Details
 - **Framework:** .NET Framework 4.8
@@ -23,6 +34,8 @@ A high-performance, native Windows audio utility designed to replace and exceed 
 ## Project Structure
 - `VolumeService.cs`: Core logic for interacting with Windows Audio sessions.
 - `HotkeyService.cs`: Low-level Win32 hooks for system-wide keyboard and mouse capture.
+- `TrackpadService.cs`: Precision touchpad gesture tracking and event handling.
 - `MainWindow.xaml`: The main glassmorphic mixer interface.
+- `SettingsWindow.xaml`: Premium tile-based utility configuration panel.
 - `OverlayWindow.xaml`: The transient real-time feedback overlay.
 - `WindowHelper.cs`: DWM interop for modern Windows 11 styling.
