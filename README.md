@@ -1,7 +1,5 @@
 # Volume Mixer Pro (C# .NETx4.8)
 
-![Volume Mixer Pro Hero](assets/hero.png)
-
 A high-performance, native Windows audio utility designed to replace and exceed the functionality of the original AutoHotkey Volume Mixer. 
 
 ## Features
@@ -22,7 +20,19 @@ A high-performance, native Windows audio utility designed to replace and exceed 
 <p align="center">
   <img src="assets/MainOverlay.png" width="800" alt="Main Interface">
   <br>
-  <em>Premium Dark Mode Interface with Native Win Design</em>
+  <em>MainOverlay Interface with Native Win Design</em>
+</p>
+
+<p align="center">
+  <img src="assets/overlay.png" width="800" alt="Real-time Overlay">
+  <br>
+  <em>Real-time Volume Feedback Overlay</em>
+</p>
+
+<p align="center">
+  <img src="assets/Utility%20Setting.png" width="800" alt="Settings Panel">
+  <br>
+  <em>Utility Setting Panel with Native Win Design</em>
 </p>
 
 ## Technical Details
