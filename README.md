@@ -18,19 +18,19 @@ A high-performance, native Windows audio utility designed to replace and exceed 
 
 ## Visuals
 <p align="center">
-  <img src="assets/MainOverlay.png" width="800" alt="Main Interface">
+  <img src="assets/MainOverlay.png" width="600" alt="Main Interface">
   <br>
   <em>MainOverlay Interface with Native Win Design</em>
 </p>
 
 <p align="center">
-  <img src="assets/overlay.png" width="800" alt="Real-time Overlay">
+  <img src="assets/overlay.png" width="600" alt="Real-time Overlay">
   <br>
   <em>Real-time Volume Feedback Overlay</em>
 </p>
 
 <p align="center">
-  <img src="assets/Utility%20Setting.png" width="800" alt="Settings Panel">
+  <img src="assets/UtilitySetting.png" width="800" alt="Settings Panel">
   <br>
   <em>Utility Setting Panel with Native Win Design</em>
 </p>
