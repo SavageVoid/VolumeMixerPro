@@ -16,28 +16,26 @@ A high-performance, native Windows audio utility designed to replace and exceed 
 - **Premium Win11 Architecture:** Modern tile-based settings layout with Segoe Fluent iconography and frosted glass (Mica) effects.
 - **Custom Sliding Controls:** Native-feel sliding toggle switches, tactile bounce animations, and a spring-wobble help interface.
 
+<p align="left">
+  <img src="assets/icons/dotnet.png" />
+  <img src="assets/icons/wpf.png" />
+  <img src="assets/icons/csharp.png" />
+  <img src="assets/icons/github.png" />
+</p>
+
 ## Visuals
-<p align="center">
-  <img src="assets/MainOverlay.png" width="600" alt="Main Interface">
-  <br>
-  <em>MainOverlay Interface with Native Win Design</em>
-</p>
-
-<p align="center">
-  <img src="assets/overlay.png" width="600" alt="Real-time Overlay">
-  <br>
-  <em>Real-time Volume Feedback Overlay</em>
-</p>
-
-<p align="center">
-  <img src="assets/UtilitySetting.png" width="800" alt="Settings Panel">
-  <br>
-  <em>Utility Setting Panel with Native Win Design</em>
-</p>
+<table border="0">
+  <tr>
+    <td><img src="assets/MainOverlay.png" width="400"><br><em>MainOverlay Interface</em></td>
+    <td><img src="assets/overlay.png" width="400"><br><em>Real-time Volume Overlay</em></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="assets/UtilitySetting.png" width="820"><br><em>Advanced Utility Setting Panel</em></td>
+  </tr>
+</table>
 
 ## Technical Details
 - **Framework:** .NET Framework 4.8
-- **Language:** C#
 - **Dependencies:** NAudio (for WASAPI/Core Audio interop)
 - **Privileges:** Runs as Administrator to control system-wide audio sessions.
 
