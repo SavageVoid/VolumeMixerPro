@@ -2,6 +2,18 @@
 
 A high-performance, native Windows audio utility designed to replace and exceed the functionality of the original AutoHotkey Volume Mixer. 
 
+## Technical Details
+- **Framework:** .NET Framework 4.8
+- **Dependencies:** NAudio (for WASAPI/Core Audio interop)
+- **Privileges:** Runs as Administrator to control system-wide audio sessions.
+
+<p align="center">
+  <img src="assets/icons/csharp.png" width="48" height="48" margin="10" />
+  <img src="assets/icons/wpf.png" width="48" height="48" margin="10" />
+  <img src="assets/icons/dotnet.png" width="48" height="48" margin="10" />
+  <img src="assets/icons/github.png" width="48" height="48" margin="10" />
+</p>
+
 ## Features
 - **Silky Smooth UI:** High-FPS hardware-accelerated animations using WPF.
 - **Advanced Overlay:** Real-time volume feedback with a custom ASCII gauge triggered by `Ctrl + Scroll`.
@@ -16,13 +28,6 @@ A high-performance, native Windows audio utility designed to replace and exceed 
 - **Premium Win11 Architecture:** Modern tile-based settings layout with Segoe Fluent iconography and frosted glass (Mica) effects.
 - **Custom Sliding Controls:** Native-feel sliding toggle switches, tactile bounce animations, and a spring-wobble help interface.
 
-<p align="left">
-  <img src="assets/icons/dotnet.png" />
-  <img src="assets/icons/wpf.png" />
-  <img src="assets/icons/csharp.png" />
-  <img src="assets/icons/github.png" />
-</p>
-
 ## Visuals
 <table border="0">
   <tr>
@@ -33,11 +38,6 @@ A high-performance, native Windows audio utility designed to replace and exceed 
     <td colspan="2" align="center"><img src="assets/UtilitySetting.png" width="820"><br><em>Advanced Utility Setting Panel</em></td>
   </tr>
 </table>
-
-## Technical Details
-- **Framework:** .NET Framework 4.8
-- **Dependencies:** NAudio (for WASAPI/Core Audio interop)
-- **Privileges:** Runs as Administrator to control system-wide audio sessions.
 
 ## Project Structure
 - `VolumeService.cs`: Core logic for interacting with Windows Audio sessions.
