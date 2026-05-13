@@ -8,9 +8,9 @@ A high-performance, native Windows audio utility designed to replace and exceed 
 - **Privileges:** Runs as Administrator to control system-wide audio sessions.
 
 <p align="center">
-  <img src="assets/icons/csharp.png" width="48" height="48" margin="10" />
+  <img src="assets/icons/csharp.png" width="49" height="49" margin="10" />
   <img src="assets/icons/wpf.png" width="48" height="48" margin="10" />
-  <img src="assets/icons/dotnet.png" width="48" height="48" margin="10" />
+  <img src="assets/icons/dotnet.png" width="45" height="45" margin="10" />
   <img src="assets/icons/github.png" width="48" height="48" margin="10" />
 </p>
 
